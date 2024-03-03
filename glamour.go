@@ -28,8 +28,10 @@ const (
 	PinkStyle    = "pink"
 )
 
-const defaultWidth = 80
-const highPriority = 1000
+const (
+	defaultWidth = 80
+	highPriority = 1000
+)
 
 // A TermRendererOption sets an option on a TermRenderer.
 type TermRendererOption func(*TermRenderer) error
@@ -202,6 +204,24 @@ func WithWordWrap(wordWrap int) TermRendererOption {
 func WithPreservedNewLines() TermRendererOption {
 	return func(tr *TermRenderer) error {
 		tr.ansiOptions.PreserveNewLines = true
+		return nil
+	}
+}
+
+// TODO: Documentation
+func WithOmittedLinkUrls() TermRendererOption {
+	return func(tr *TermRenderer) error {
+		tr.ansiOptions.OmitLinkUrls = true
+		return nil
+	}
+}
+
+// TODO: Documentation
+func WithAutoOmittedLinkUrls() TermRendererOption {
+	return func(tr *TermRenderer) error {
+		// TODO: Maybe this should be done by another tool, but propose a solution
+		//       here, that just scans $TERM for kitty, ghostty, wezterm, ...
+		tr.ansiOptions.OmitLinkUrls = true
 		return nil
 	}
 }
