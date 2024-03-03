@@ -18,6 +18,7 @@ type Options struct {
 	BaseURL          string
 	WordWrap         int
 	PreserveNewLines bool
+	OmitLinkUrls     bool
 	ColorProfile     termenv.Profile
 	Styles           StyleConfig
 }

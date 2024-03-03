@@ -3,6 +3,8 @@ package ansi
 import (
 	"io"
 	"net/url"
+
+	"github.com/muesli/termenv"
 )
 
 // A LinkElement is used to render hyperlinks.
@@ -22,10 +24,26 @@ func (e *LinkElement) Render(w io.Writer, ctx RenderContext) error {
 			Token: e.Text,
 			Style: ctx.options.Styles.LinkText,
 		}
+
+		// TODO: There is some logic at the end of this function that resolves
+		//       URLs and whether to render them at all. This should be re-used
+		//       here.
+		hasLinkThatShouldBeRendered := true
+		if ctx.options.OmitLinkUrls && hasLinkThatShouldBeRendered {
+			// See https://gist.github.com/egmontkob/eb114294efbcd5adb1944c9f3cb5feda#the-escape-sequence
+			// TODO: Replace test link to google.com
+			el.Prefix = termenv.OSC + "8;;" + "https://google.com" + termenv.ST
+			el.Suffix = termenv.OSC + "8;;" + termenv.ST
+		}
+
 		err := el.Render(w, ctx)
 		if err != nil {
 			return err
 		}
+	}
+
+	if ctx.options.OmitLinkUrls {
+		return nil
 	}
 
 	/*
